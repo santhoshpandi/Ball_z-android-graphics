@@ -1,11 +1,44 @@
 package com.example.ball_z;
 
+
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
+import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.view.View;
+import android.widget.Toast;
+import com.example.ball_z.BallView;
+
+
+ class BallView extends View {
+    private int ballX, ballY;
+    private Paint ballPaint;
+
+    public BallView(Context context) {
+        super(context);
+        ballPaint = new Paint();
+        ballPaint.setColor(Color.RED); // Set the color of the ball
+    }
+
+    public void setBallPosition(int x, int y) {
+        ballX = x;
+        ballY = y;
+        invalidate(); // Request a redraw
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        canvas.drawCircle(ballX, ballY, 20, ballPaint); // Draw the ball at (ballX, ballY) with radius 20
+    }
+}
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,7 +54,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         getSupportActionBar().hide();
 
-        ball = findViewById(R.id.ball);
+        try{
+            ball =findViewById(R.id.ball);
+        }
+        catch (Exception e)
+        {
+            Toast.makeText(this,e.toString(),Toast.LENGTH_SHORT).show();
+        }
         ballX = ballY = 0;
         Button btnUp = findViewById(R.id.btnUp);
         Button btnDown = findViewById(R.id.btnDown);
@@ -62,7 +101,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onLongClick(View v) {
                 isLongPress = true;
-                handler.post(new AutoMoveRunnable(0, -10));
+                handler.post(new AutoMoveRunnable(0, -50));
+                final Handler handler1 = new Handler();
+                Runnable runnable1 = new Runnable() {
+                    @Override
+                    public void run() {
+                        handler.removeCallbacksAndMessages(null);
+                        handler.post(new AutoMoveRunnable(0, 50));
+                    }
+                };
+                int delayMillis = 4000; // Delay in milliseconds
+                handler1.postDelayed(runnable1, delayMillis);
+
                 return true;
             }
 
@@ -72,7 +122,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onLongClick(View v) {
                 isLongPress = true;
-                handler.post(new AutoMoveRunnable(0, 10));
+                handler.post(new AutoMoveRunnable(0, 50));
+                final Handler handler1 = new Handler();
+                Runnable runnable1 = new Runnable() {
+                    @Override
+                    public void run() {
+                        handler.removeCallbacksAndMessages(null);
+                        handler.post(new AutoMoveRunnable(0, -50));
+                    }
+                };
+                int delayMillis = 4000; // Delay in milliseconds
+                handler1.postDelayed(runnable1, delayMillis);
                 return true;
             }
         });
@@ -81,7 +141,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onLongClick(View v) {
                 isLongPress = true;
-                handler.post(new AutoMoveRunnable(-10, 0));
+                handler.post(new AutoMoveRunnable(-50, 0));
+                final Handler handler1 = new Handler();
+                Runnable runnable1 = new Runnable() {
+                    @Override
+                    public void run() {
+                        handler.removeCallbacksAndMessages(null);
+                        handler.post(new AutoMoveRunnable(50, 0));
+                    }
+                };
+                int delayMillis = 2000; // Delay in milliseconds
+                handler1.postDelayed(runnable1, delayMillis);
                 return true;
             }
         });
@@ -90,7 +160,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onLongClick(View v) {
                 isLongPress = true;
-                handler.post(new AutoMoveRunnable(10, 0));
+                handler.post(new AutoMoveRunnable(50, 0));
+                final Handler handler1 = new Handler();
+                Runnable runnable1 = new Runnable() {
+                    @Override
+                    public void run() {
+                        handler.removeCallbacksAndMessages(null);
+                        handler.post(new AutoMoveRunnable(-50, 0));
+                    }
+                };
+                int delayMillis = 2000; // Delay in milliseconds
+                handler1.postDelayed(runnable1, delayMillis);
+
                 return true;
             }
         });
